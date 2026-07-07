@@ -1,30 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ribbit from './assets/ribbit.jpg'
 import './App.css'
-
-// type Cat = {
-//   id: number,
-//   name: string,
-//   breed: string,
-//   age: string,
-//   avatar: string,
-//   status: string,
-//   weight: string,
-//   nextCare: string
-// }
-
-const cats = [
-  {
-    id: 1,
-    name: 'Ribbit',
-    breed: 'N/A',
-    age: '1 year',
-    avatar: 'MI',
-    status: 'Stable',
-    weight: 'TBD',
-    nextCare: 'Ex. Dental cleaning due in 18 days',
-  },
-]
 
 const documents = [
   { title: 'Rabies certificate', date: 'May 12, 2026', tag: 'Vaccine' },
@@ -33,17 +9,119 @@ const documents = [
 ]
 
 function App() {
-  const [selectedCat, setSelectedCat] = useState(cats[0])
+  const [cats, setCats] = useState([]);
+  const [selectedCat, setSelectedCat] = useState(null);
+  const [newCatName, setNewCatName] = useState("");
+  const [newCatBreed, setNewCatBreed] = useState("");
+  const [newCatAge, setNewCatAge] = useState("");
+  const [newCatWeight, setNewCatWeight] = useState("");
+  const [newCatStatus, setNewCatStatus] = useState("");
+  const [newCatNextCare, setNewCatNextCare] = useState("");
+
+  async function loadCats() {
+    try {
+      const response = await fetch("http://localhost:5000/api/cats");
+      const data = await response.json();
+
+      setCats(data);
+
+      if (data.length > 0) {
+        setSelectedCat(data[0]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    loadCats();
+  }, []);
+
+  if (!selectedCat) {
+    return <p>Loading...</p>;
+  }
+
+  async function createCat() {
+    const response = await fetch("http://localhost:5000/api/cats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: newCatName,
+        breed: newCatBreed,
+        age: Number(newCatAge),
+        weight: Number(newCatWeight),
+        avatar: newCatName.charAt(0).toUpperCase(),
+        status: newCatStatus,
+        nextCare: newCatNextCare
+      })
+    });
+
+    const cat = await response.json();
+    
+    await loadCats();
+  }
 
   return (
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <p className="eyebrow">Kitty Health</p>
-          <h1>Welcome back, Joaquin</h1>
+          <p className="eyebrow">DigiKitty</p>
+          <h1>Welcome!</h1>
         </div>
         <button className="icon-button" aria-label="Open alerts">!</button>
       </header>
+
+      <div className="add-cat-form">
+        <h2>Add a Cat</h2>
+
+        <input
+          type="text"
+          placeholder="Name"
+          value={newCatName}
+          onChange={(e) => setNewCatName(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Breed"
+          value={newCatBreed}
+          onChange={(e) => setNewCatBreed(e.target.value)}
+        />
+
+        <input
+          type="number"
+          placeholder="Age"
+          value={newCatAge}
+          onChange={(e) => setNewCatAge(e.target.value)}
+        />
+
+        <input
+          type="number"
+          placeholder="Weight (lbs)"
+          value={newCatWeight}
+          onChange={(e) => setNewCatWeight(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Status"
+          value={newCatStatus}
+          onChange={(e) => setNewCatStatus(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Next Care"
+          value={newCatNextCare}
+          onChange={(e) => setNewCatNextCare(e.target.value)}
+        />
+
+        <button onClick={createCat}>
+          Create Cat
+        </button>
+      </div>
 
       <section className="cat-strip" aria-label="Cat profiles">
         {cats.map((cat) => (
@@ -65,7 +143,7 @@ function App() {
         <div>
           <p className="eyebrow">{selectedCat.name}'s health</p>
           <h2>{selectedCat.status} health trend</h2>
-          <p>{selectedCat.nextCare}</p>
+          <p>Next care: {selectedCat.nextCare}</p>
         </div>
         <div className="score-ring">
           <strong>86</strong>

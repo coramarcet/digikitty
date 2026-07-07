@@ -11,6 +11,7 @@ const CatSchema = new mongoose.Schema({
   avatar: String,
   status: String,
   nextCare: String,
+  medications: String,
 }, {
   timestamps: true,
 });

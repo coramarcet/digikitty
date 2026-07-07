@@ -49,6 +49,7 @@ button {
 
 .icon-button,
 .primary-button {
+  margin-top: 20px;
   background: #1f2a2c;
   color: white;
 }
@@ -106,6 +107,7 @@ small {
   margin-top: 2px;
 }
 
+.documents,
 .panel {
   background: #ffffff;
   border: 1px solid #dce7e0;
@@ -148,7 +150,8 @@ small {
 }
 
 .documents {
-  margin-top: 18px;
+  background: #f4b860;
+  color: #1f2a2c;
 }
 
 .doc-list {

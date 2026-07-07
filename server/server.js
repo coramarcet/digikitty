@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const multer = require("multer");
 
 const app = express();
 
@@ -12,13 +13,20 @@ require("dotenv").config();
 const Cat = require("./models/Cat");
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("Connected to MongoDB!");
-    })
-    .catch((err) => {
-        console.error(err);
-    });
+  .then(() => {
+      console.log("Connected to MongoDB!");
+  })
+  .catch((err) => {
+      console.error(err);
+  });
 
+const upload = multer({
+  storage: multer.memoryStorage()
+});
+
+const MedicalDocument = require("./models/MedicalDocument");
+
+// Get info about cat from database
 app.get("/api/cats", async (req, res) => {
   try {
     const cats = await Cat.find();
@@ -28,6 +36,7 @@ app.get("/api/cats", async (req, res) => {
   }
 });
 
+// Send databased info about new cat
 app.post("/api/cats", async (req, res) => {
   try {
     const newCat = await Cat.create(req.body);
@@ -35,6 +44,33 @@ app.post("/api/cats", async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
+});
+
+// Send database new uploaded medical document
+app.post("/api/documents", upload.single("pdf"), async (req, res) => {
+  try {
+    const document = await MedicalDocument.create({
+      catId: req.body.catId,
+      title: req.body.title,
+      type: req.body.type,
+      visitDate: req.body.visitDate,
+      fileName: req.file.originalname,
+      mimeType: req.file.mimetype,
+      pdf: req.file.buffer
+    });
+    res.status(201).json(document);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Get medical document info
+app.get("/api/documents/:catId", async (req, res) => {
+    const documents = await MedicalDocument.find({
+        catId: req.params.catId
+    });
+
+    res.json(documents);
 });
 
 const PORT = 5000;

@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
 import ribbit from './assets/ribbit.jpg'
 import './App.css'
+import CareCalendar from "./components/CareCalendar";
 
 function App() {
   const [cats, setCats] = useState([]);
   const [selectedCat, setSelectedCat] = useState(null);
   const [newCatName, setNewCatName] = useState("");
+  const [newCatBirthday, setNewCatBirthday] = useState("");
   const [newCatBreed, setNewCatBreed] = useState("");
   const [newCatAge, setNewCatAge] = useState("");
   const [newCatWeight, setNewCatWeight] = useState("");
-  const [newCatStatus, setNewCatStatus] = useState("");
+  const [newCatNextCareDate, setNewCatNextCareDate] = useState("");
   const [newCatNextCare, setNewCatNextCare] = useState("");
   const [newCatMedications, setNewCatMedications] = useState("");
   const [showAddCatForm, setShowAddCatForm] = useState(false);
@@ -57,11 +59,12 @@ function App() {
       },
       body: JSON.stringify({
         name: newCatName,
+        birthday: newCatBirthday,
         breed: newCatBreed,
         age: Number(newCatAge),
         weight: Number(newCatWeight),
         avatar: newCatName.charAt(0).toUpperCase(),
-        status: newCatStatus,
+        nextCareDate: newCatNextCareDate,
         nextCare: newCatNextCare,
         medications: newCatMedications
       })
@@ -79,10 +82,11 @@ function App() {
 
     // Clear the inputs for next time
     setNewCatName("");
+    setNewCatBirthday("");
     setNewCatBreed("");
     setNewCatAge("");
     setNewCatWeight("");
-    setNewCatStatus("");
+    setNewCatNextCareDate("");
     setNewCatNextCare("");
     setNewCatMedications("");
   }
@@ -130,6 +134,34 @@ function App() {
     }
   }
 
+  const events = [];
+
+  cats.forEach((cat) => {
+    if (cat.birthday) {
+      const birthday = new Date(cat.birthday);
+
+      const birthdayThisYear = new Date(
+          new Date().getFullYear(),
+          birthday.getMonth(),
+          birthday.getDate()
+      );
+
+      events.push({
+          title: `🎂 ${cat.name}'s Birthday`,
+          start: birthdayThisYear,
+          end: birthdayThisYear,
+          type: "birthday"
+      });
+    }
+    if (cat.nextCareDate) {
+      events.push({
+        title: `🩺 ${cat.name} - ${cat.nextCare}`,
+        start: new Date(cat.nextCareDate),
+        end: new Date(cat.nextCareDate)
+      });
+    }
+  });
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -138,6 +170,12 @@ function App() {
           <h1>Welcome!</h1>
         </div>
       </header>
+
+      <section className="panel">
+        <h2>Calendar📅</h2>
+
+        <CareCalendar events={events} />
+      </section>
 
       <button
         className="primary-button"
@@ -155,6 +193,13 @@ function App() {
             placeholder="Name"
             value={newCatName}
             onChange={(e) => setNewCatName(e.target.value)}
+          />
+
+          <input
+            type="date"
+            placeholder="Birthday"
+            value={newCatBirthday}
+            onChange={(e) => setNewCatBirthday(e.target.value)}
           />
 
           <input
@@ -180,16 +225,16 @@ function App() {
 
           <input
             type="text"
-            placeholder="Status"
-            value={newCatStatus}
-            onChange={(e) => setNewCatStatus(e.target.value)}
+            placeholder="Next care"
+            value={newCatNextCare}
+            onChange={(e) => setNewCatNextCare(e.target.value)}
           />
 
           <input
-            type="text"
-            placeholder="Next Care"
-            value={newCatNextCare}
-            onChange={(e) => setNewCatNextCare(e.target.value)}
+            type="date"
+            placeholder="Next Care Date"
+            value={newCatNextCareDate}
+            onChange={(e) => setNewCatNextCareDate(e.target.value)}
           />
 
           <input
@@ -199,11 +244,11 @@ function App() {
             onChange={(e) => setNewCatMedications(e.target.value)}
           />
 
-          <button onClick={createCat}>
+          <button className="small-button" onClick={createCat}>
             Create Cat
           </button>
 
-          <button onClick={() => setShowAddCatForm(false)}>
+          <button className="small-button" onClick={() => setShowAddCatForm(false)}>
             Cancel
           </button>
         </div>
@@ -219,7 +264,7 @@ function App() {
             <span className="avatar">{cat.avatar}</span>
             <span>
               <strong>{cat.name}</strong>
-              <small>{cat.breed} - {cat.age}</small>
+              <small>{cat.breed} - {cat.age} yr(s)</small>
             </span>
           </button>
         ))}
@@ -227,33 +272,34 @@ function App() {
 
       <section className="panel hero-panel">
         <div>
-          <p className="eyebrow">{selectedCat.name}'s health</p>
-          <h2>Current status: {selectedCat.status}</h2>
-          <p>Next care: {selectedCat.nextCare}</p>
+          <p className="eyebrow">{selectedCat.name}'s upcoming appointments🩺</p>
+          <h2>Next appointment: {selectedCat.nextCare}</h2>
+          <p>
+            {new Date(selectedCat.nextCareDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric"
+                    })}
+          </p>
         </div>
       </section>
 
       <section className="grid">
         <article className="panel metric">
-          <span>Weight</span>
-          <strong>{selectedCat.weight}</strong>
+          <span>Weight📊</span>
+          <strong>{selectedCat.weight} lbs</strong>
           <small>+0.2 lb over 30 days</small>
         </article>
         <article className="panel metric">
-          <span>Medication</span>
+          <span>Medication💊</span>
           <strong>{selectedCat.medications}</strong>
           <small>Next dose: N/A</small>
-        </article>
-        <article className="panel metric">
-          <span>Vet visits</span>
-          <strong>1 upcoming</strong>
-          <small>{selectedCat.nextCare}</small>
         </article>
       </section>
 
       <section>
         <article className="documents">
-          <p>Medical Documents</p>
+          <p>Medical Documents📄</p>
           <button
             className="primary-button"
             onClick={() => setShowUploadForm(true)}
@@ -295,11 +341,11 @@ function App() {
                 onChange={(e) => setSelectedFile(e.target.files[0])}
               />
 
-              <button onClick={uploadDocument}>
+              <button className="small-button" onClick={uploadDocument}>
                 Upload Document
               </button>
 
-              <button onClick={() => setShowUploadForm(false)}>
+              <button className="small-button" onClick={() => setShowUploadForm(false)}>
                 Cancel
               </button>
 
@@ -318,7 +364,7 @@ function App() {
                 }
               >
                 <div className="document-info">
-                  <h3>📄{doc.title}</h3>
+                  <h3>{doc.title}</h3>
 
                   <p>{doc.type}</p>
 
@@ -335,13 +381,6 @@ function App() {
           </div>
         </article>
       </section>
-
-      <nav className="bottom-nav" aria-label="Primary navigation">
-        <button>Home</button>
-        <button>Health</button>
-        <button>Docs</button>
-        <button>Care</button>
-      </nav>
     </main>
   )
 }

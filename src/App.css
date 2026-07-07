@@ -54,6 +54,10 @@ button {
   color: white;
 }
 
+.small-button {
+  margin: 2px;
+}
+
 .icon-button {
   border-radius: 999px;
   height: 42px;
@@ -206,13 +210,6 @@ small {
   position: fixed;
   transform: translateX(-50%);
   width: 100%;
-}
-
-.bottom-nav button {
-  background: transparent;
-  color: #ffffff;
-  font-size: 0.78rem;
-  padding: 10px 0;
 }
 
 .document-list {

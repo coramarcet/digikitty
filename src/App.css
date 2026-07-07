@@ -70,6 +70,10 @@ button {
   font-weight: 800;
 }
 
+.cat {
+  margin-top: 20px;
+}
+
 .cat-strip {
   display: grid;
   gap: 12px;

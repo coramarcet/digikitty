@@ -1,16 +1,19 @@
-# React + Vite
+# DigiKitty
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DigiKitty is a comprehensive cat care platform. DigiKitty has a calendar to keep track of your cats' upcoming vet appointments and birthdays. After vet appointments, you can upload your medical documents and keep them organized for future reference. DigiKitty is designed for both first time and experienced cat owners and is specially designed for multi cat households!
 
-Currently, two official plugins are available:
+## How to run DigiKitty
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Navigate to the digikitty/server folder and run:
+npm run dev
+to start the backend.
 
-## React Compiler
+Navigate to the digikitty folder and run:
+npm run dev
+to start the frontend.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Open http://localhost:5173/ in your browser to access DigiKitty!
 
-## Expanding the ESLint configuration
+## Infrastructure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+For our frontend, we use React and Vite. For our backend, we use Node.js and Express. For our database, we use MongoDB.

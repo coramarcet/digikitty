@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import ribbit from './assets/ribbit.jpg'
+import kitty from './assets/cat.png'
+import kittyWink from './assets/catwinking.png'
 import './App.css'
 import CareCalendar from "./components/CareCalendar";
 
@@ -21,6 +22,7 @@ function App() {
   const [documentDate, setDocumentDate] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [documents, setDocuments] = useState([]);
+  const [isWinking, setIsWinking] = useState(false);
 
   async function loadCats() {
     try {
@@ -46,6 +48,14 @@ function App() {
         loadDocuments(selectedCat._id);
     }
   }, [selectedCat]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsWinking((prev) => !prev);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (!selectedCat) {
     return <p>Loading...</p>;
@@ -170,6 +180,14 @@ function App() {
           <h1>Welcome!</h1>
         </div>
       </header>
+
+      <div>
+        <img
+        className="cat"
+        src={isWinking ? kitty : kittyWink}
+        alt="DigiKitty"
+        />
+      </div>
 
       <section className="panel">
         <h2>Calendar📅</h2>

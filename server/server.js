@@ -49,6 +49,11 @@ app.post("/api/cats", async (req, res) => {
 // Send database new uploaded medical document
 app.post("/api/documents", upload.single("pdf"), async (req, res) => {
   try {
+    if (req.file.mimetype !== "application/pdf") {
+      return res.status(400).json({
+        error: "Only PDF files are allowed."
+      });
+    }
     const document = await MedicalDocument.create({
       catId: req.body.catId,
       title: req.body.title,

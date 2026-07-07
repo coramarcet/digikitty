@@ -231,10 +231,6 @@ function App() {
           <h2>Current status: {selectedCat.status}</h2>
           <p>Next care: {selectedCat.nextCare}</p>
         </div>
-        <div className="score-ring">
-          <strong>86</strong>
-          <small>score</small>
-        </div>
       </section>
 
       <section className="grid">
@@ -311,12 +307,29 @@ function App() {
           )}
           <div className="document-list">
             {documents.map((doc) => (
-              <div className="document-card" key={doc._id}>
-                <strong>{doc.title}</strong>
+              <div
+                className="document-card"
+                key={doc._id}
+                onClick={() =>
+                  window.open(
+                    `http://localhost:5000/api/documents/view/${doc._id}`,
+                    "_blank"
+                  )
+                }
+              >
+                <div className="document-info">
+                  <h3>📄{doc.title}</h3>
 
-                <p>{doc.type}</p>
+                  <p>{doc.type}</p>
 
-                <small>{doc.visitDate}</small>
+                  <small>
+                    {new Date(doc.visitDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric"
+                    })}
+                  </small>
+                </div>
               </div>
             ))}
           </div>

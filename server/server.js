@@ -73,6 +73,15 @@ app.get("/api/documents/:catId", async (req, res) => {
     res.json(documents);
 });
 
+// Get PDF viewing info
+app.get("/api/documents/view/:id", async (req, res) => {
+  const document = await MedicalDocument.findById(req.params.id);
+
+  res.contentType(document.mimeType);
+
+  res.send(document.pdf);
+});
+
 const PORT = 5000;
 
 app.listen(PORT, () => {

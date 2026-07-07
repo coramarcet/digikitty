@@ -88,6 +88,11 @@ button {
   border-color: #43766c;
 }
 
+.cat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
 .avatar {
   align-items: center;
   background: #f4b860;
@@ -208,4 +213,47 @@ small {
   color: #ffffff;
   font-size: 0.78rem;
   padding: 10px 0;
+}
+
+.document-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.document-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 16px;
+
+    background: white;
+
+    border: 1px solid #dce7e0;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.document-info h3 {
+    margin: 0;
+}
+
+.document-info p {
+    margin: 4px 0;
+    color: gray;
+}
+
+.document-info small {
+    color: #888;
 }
